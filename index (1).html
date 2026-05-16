@@ -1,3 +1,14 @@
+ではここにコード全文を貼ります！
+
+**手順：**
+1. 下のコードを全部コピー（右上のコピーボタンか Ctrl+A → Ctrl+C）
+2. GitHubのエディタの中を全部消す（Ctrl+A → Delete）
+3. 貼り付ける（Ctrl+V）
+4. 「Commit changes...」を押す！
+
+---
+
+```html
 <!DOCTYPE html>
 <html lang="ja">
 <head>
@@ -110,3 +121,118 @@
           <option value="10月">10月</option><option value="11月">11月</option>
           <option value="12月">12月</option>
         </select>
+      </div>
+    </div>
+    <div class="conf-label">確度</div>
+    <div class="conf-row">
+      <button class="conf-btn" id="cb-high" onclick="selectConf('高')">🔥 高（ほぼ確実）</button>
+      <button class="conf-btn" id="cb-mid"  onclick="selectConf('中')">〜 中（検討中）</button>
+      <button class="conf-btn" id="cb-low"  onclick="selectConf('低')">？ 低（様子見）</button>
+    </div>
+    <button class="submit-btn" onclick="doAdd()">＋ 追加する</button>
+  </div>
+  <div class="section-title">招待ログ</div>
+  <div class="log-box">
+    <div class="log-header">記録</div>
+    <div id="log-list"><div class="empty-log">読み込み中…</div></div>
+  </div>
+</div>
+<script>
+const TARGET = 12;
+const KEY = 'suppon_v3';
+let selectedConf = '';
+let state = {
+  invites: [
+    { name: '黒田さん', month: '', conf: '高', date: '5/16' },
+    { name: '三木くん', month: '', conf: '高', date: '5/16' },
+  ]
+};
+function selectConf(val) {
+  selectedConf = val;
+  document.getElementById('cb-high').className = 'conf-btn' + (val==='高' ? ' active-high' : '');
+  document.getElementById('cb-mid').className  = 'conf-btn' + (val==='中' ? ' active-mid'  : '');
+  document.getElementById('cb-low').className  = 'conf-btn' + (val==='低' ? ' active-low'  : '');
+}
+function setSyncStatus(ok, msg) {
+  document.getElementById('sync-dot').className = 'dot' + (ok ? '' : ' saving');
+  document.getElementById('sync-status').textContent = msg;
+}
+function load() {
+  const ls = localStorage.getItem(KEY);
+  if (ls) state = JSON.parse(ls);
+  setSyncStatus(true, 'ローカルに保存されています');
+  render();
+}
+function save() {
+  localStorage.setItem(KEY, JSON.stringify(state));
+  setSyncStatus(true, '保存しました');
+}
+function daysLeft() {
+  const now = new Date(); now.setHours(0,0,0,0);
+  const dl = new Date('2025-06-11');
+  const d = Math.ceil((dl - now) / 86400000);
+  const el = document.getElementById('days-badge');
+  el.textContent = d > 0 ? '残り'+d+'日' : d===0 ? '今日が締切' : '締切超過';
+}
+function updateMetrics() {
+  const total = state.invites.length;
+  const high = state.invites.filter(i => i.conf==='高').length;
+  const rem = Math.max(0, TARGET - total);
+  const pct = Math.round(total / TARGET * 100);
+  document.getElementById('cnt-total').textContent = total;
+  document.getElementById('cnt-high').textContent = high;
+  document.getElementById('cnt-rem').textContent = rem;
+  document.getElementById('prog-fill').style.width = pct + '%';
+  document.getElementById('prog-text').textContent = total + ' / ' + TARGET + ' 人';
+  document.getElementById('prog-pct').textContent = pct + '%';
+}
+function confBadge(c) {
+  const map = { '高': ['conf-high','高確度'], '中': ['conf-mid','中確度'], '低': ['conf-low','低確度'] };
+  const [cls, label] = map[c] || ['conf-mid','中確度'];
+  return '<span class="badge ' + cls + '">' + label + '</span>';
+}
+function renderLog() {
+  const el = document.getElementById('log-list');
+  if (!state.invites.length) { el.innerHTML = '<div class="empty-log">まだ記録がありません</div>'; return; }
+  el.innerHTML = '';
+  [...state.invites].reverse().forEach((inv, ri) => {
+    const realIdx = state.invites.length - 1 - ri;
+    const d = document.createElement('div');
+    d.className = 'log-item';
+    d.innerHTML =
+      '<div class="avatar">え</div>' +
+      '<span class="log-name">' + inv.name + '</span>' +
+      (inv.conf ? confBadge(inv.conf) : '') +
+      (inv.month ? '<span class="month-badge">📅 ' + inv.month + '</span>' : '') +
+      '<span class="log-date">' + inv.date + '</span>' +
+      '<button class="del-btn" data-i="' + realIdx + '" title="削除">✕</button>';
+    el.appendChild(d);
+  });
+  el.querySelectorAll('.del-btn').forEach(btn => {
+    btn.onclick = () => {
+      state.invites.splice(parseInt(btn.dataset.i), 1);
+      save(); render();
+    };
+  });
+}
+function doAdd() {
+  const name = document.getElementById('f-name').value.trim();
+  if (!name) { document.getElementById('f-name').focus(); return; }
+  const month = document.getElementById('f-month').value;
+  const now = new Date();
+  const dateStr = (now.getMonth()+1) + '/' + now.getDate();
+  state.invites.push({ name, month, conf: selectedConf || '中', date: dateStr });
+  document.getElementById('f-name').value = '';
+  document.getElementById('f-month').value = '';
+  selectConf('');
+  save(); render();
+}
+document.getElementById('f-name').addEventListener('keydown', e => { if (e.key==='Enter') doAdd(); });
+function render() { daysLeft(); updateMetrics(); renderLog(); }
+load();
+</script>
+</body>
+</html>
+```
+
+貼り付けたら「Commit changes...」→「Commit changes」でOKです！
