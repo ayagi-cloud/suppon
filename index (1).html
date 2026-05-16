@@ -7,50 +7,25 @@
 <style>
   *, *::before, *::after { box-sizing: border-box; margin: 0; padding: 0; }
   :root {
-    --bg: #ffffff;
-    --bg2: #f5f5f3;
-    --bg3: #eeede9;
-    --text: #1a1a1a;
-    --text2: #6b6b6b;
-    --text3: #aaaaaa;
-    --border: rgba(0,0,0,0.12);
-    --border2: rgba(0,0,0,0.22);
-    --green: #1D9E75;
-    --green-light: #E1F5EE;
-    --green-dark: #0F6E56;
-    --amber: #BA7517;
-    --amber-light: #FAEEDA;
-    --amber-dark: #633806;
-    --red-light: #FCEBEB;
-    --red-dark: #791F1F;
-    --radius: 8px;
-    --radius-lg: 12px;
+    --bg: #ffffff; --bg2: #f5f5f3; --bg3: #eeede9;
+    --text: #1a1a1a; --text2: #6b6b6b; --text3: #aaaaaa;
+    --border: rgba(0,0,0,0.12); --border2: rgba(0,0,0,0.22);
+    --green: #1D9E75; --green-light: #E1F5EE; --green-dark: #0F6E56;
+    --amber: #BA7517; --amber-light: #FAEEDA; --amber-dark: #633806;
+    --red-light: #FCEBEB; --red-dark: #791F1F;
+    --radius: 8px; --radius-lg: 12px;
   }
   @media (prefers-color-scheme: dark) {
     :root {
-      --bg: #1e1e1c;
-      --bg2: #2a2a28;
-      --bg3: #333330;
-      --text: #f0ede8;
-      --text2: #9a9890;
-      --text3: #666666;
-      --border: rgba(255,255,255,0.1);
-      --border2: rgba(255,255,255,0.2);
-      --green-light: #04342C;
-      --green-dark: #9FE1CB;
-      --amber-light: #412402;
-      --amber-dark: #FAC775;
-      --red-light: #501313;
-      --red-dark: #F09595;
+      --bg: #1e1e1c; --bg2: #2a2a28; --bg3: #333330;
+      --text: #f0ede8; --text2: #9a9890; --text3: #666666;
+      --border: rgba(255,255,255,0.1); --border2: rgba(255,255,255,0.2);
+      --green-light: #04342C; --green-dark: #9FE1CB;
+      --amber-light: #412402; --amber-dark: #FAC775;
+      --red-light: #501313; --red-dark: #F09595;
     }
   }
-  body {
-    font-family: -apple-system, BlinkMacSystemFont, 'Hiragino Sans', 'Yu Gothic UI', sans-serif;
-    background: var(--bg3);
-    color: var(--text);
-    min-height: 100vh;
-    padding: 2rem 1rem;
-  }
+  body { font-family: -apple-system, BlinkMacSystemFont, 'Hiragino Sans', 'Yu Gothic UI', sans-serif; background: var(--bg3); color: var(--text); min-height: 100vh; padding: 2rem 1rem; }
   .container { max-width: 720px; margin: 0 auto; }
   .top { display: flex; align-items: center; justify-content: space-between; margin-bottom: 1.5rem; flex-wrap: wrap; gap: 10px; }
   .page-title { font-size: 20px; font-weight: 500; }
@@ -94,7 +69,7 @@
   .badge { font-size: 11px; padding: 2px 8px; border-radius: var(--radius); flex-shrink: 0; }
   .conf-high { background: var(--green-light); color: var(--green-dark); }
   .conf-mid  { background: var(--amber-light); color: var(--amber-dark); }
-  .conf-low  { background: var(--red-light);   color: var(--red-dark);   }
+  .conf-low  { background: var(--red-light); color: var(--red-dark); }
   .month-badge { font-size: 11px; padding: 2px 8px; border-radius: var(--radius); background: var(--bg2); color: var(--text2); border: 0.5px solid var(--border); flex-shrink: 0; }
   .log-date { font-size: 11px; color: var(--text3); margin-left: auto; margin-right: 4px; flex-shrink: 0; }
   .del-btn { background: none; border: none; cursor: pointer; color: var(--text3); font-size: 16px; line-height: 1; padding: 2px; transition: color 0.15s; }
@@ -104,7 +79,6 @@
 </head>
 <body>
 <div class="container">
-
   <div class="top">
     <h1 class="page-title">🐢 すっぽんチーム 招待管理</h1>
     <div class="deadline-badge">
@@ -112,204 +86,27 @@
       <span class="days-pill" id="days-badge"></span>
     </div>
   </div>
-
   <div class="sync-bar">
     <span class="dot saving" id="sync-dot"></span>
     <span id="sync-status">読み込み中…</span>
   </div>
-
   <div class="metrics">
-    <div class="metric">
-      <div class="metric-label">招待済み</div>
-      <div class="metric-value green" id="cnt-total">–</div>
-    </div>
-    <div class="metric">
-      <div class="metric-label">高確度</div>
-      <div class="metric-value green" id="cnt-high">–</div>
-    </div>
-    <div class="metric">
-      <div class="metric-label">残り</div>
-      <div class="metric-value amber" id="cnt-rem">–</div>
-    </div>
+    <div class="metric"><div class="metric-label">招待済み</div><div class="metric-value green" id="cnt-total">–</div></div>
+    <div class="metric"><div class="metric-label">高確度</div><div class="metric-value green" id="cnt-high">–</div></div>
+    <div class="metric"><div class="metric-label">残り</div><div class="metric-value amber" id="cnt-rem">–</div></div>
   </div>
-
   <div class="progress-bg"><div class="progress-fill" id="prog-fill" style="width:0%"></div></div>
-  <div class="progress-labels">
-    <span id="prog-text">– / 12 人</span>
-    <span id="prog-pct">–%</span>
-  </div>
-
+  <div class="progress-labels"><span id="prog-text">– / 12 人</span><span id="prog-pct">–%</span></div>
   <div class="section-title">招待者を追加（えりこ）</div>
   <div class="add-form">
     <div class="form-grid">
-      <div class="form-field">
-        <label>氏名</label>
-        <input type="text" id="f-name" placeholder="例：山田 太郎">
-      </div>
+      <div class="form-field"><label>氏名</label><input type="text" id="f-name" placeholder="例：山田 太郎"></div>
       <div class="form-field">
         <label>受講希望月</label>
         <select id="f-month">
           <option value="">未定</option>
-          <option value="6月">6月</option>
-          <option value="7月">7月</option>
-          <option value="8月">8月</option>
-          <option value="9月">9月</option>
-          <option value="10月">10月</option>
-          <option value="11月">11月</option>
+          <option value="6月">6月</option><option value="7月">7月</option>
+          <option value="8月">8月</option><option value="9月">9月</option>
+          <option value="10月">10月</option><option value="11月">11月</option>
           <option value="12月">12月</option>
         </select>
-      </div>
-    </div>
-    <div class="conf-label">確度</div>
-    <div class="conf-row">
-      <button class="conf-btn" id="cb-high" onclick="selectConf('高')">🔥 高（ほぼ確実）</button>
-      <button class="conf-btn" id="cb-mid"  onclick="selectConf('中')">〜 中（検討中）</button>
-      <button class="conf-btn" id="cb-low"  onclick="selectConf('低')">？ 低（様子見）</button>
-    </div>
-    <button class="submit-btn" onclick="doAdd()">＋ 追加する</button>
-  </div>
-
-  <div class="section-title">招待ログ</div>
-  <div class="log-box">
-    <div class="log-header">記録</div>
-    <div id="log-list"><div class="empty-log">読み込み中…</div></div>
-  </div>
-
-</div>
-<script>
-const TARGET = 12;
-const KEY = 'suppon_v3';
-const USE_FIREBASE = false;
-const FIREBASE_URL = 'https://YOUR_PROJECT.firebaseio.com';
-
-let selectedConf = '';
-let state = {
-  invites: [
-    { name: '黒田さん', month: '', conf: '高', date: '5/16' },
-    { name: '三木くん', month: '', conf: '高', date: '5/16' },
-  ]
-};
-
-function selectConf(val) {
-  selectedConf = val;
-  document.getElementById('cb-high').className = 'conf-btn' + (val === '高' ? ' active-high' : '');
-  document.getElementById('cb-mid').className  = 'conf-btn' + (val === '中' ? ' active-mid'  : '');
-  document.getElementById('cb-low').className  = 'conf-btn' + (val === '低' ? ' active-low'  : '');
-}
-
-function setSyncStatus(ok, msg) {
-  document.getElementById('sync-dot').className = 'dot' + (ok ? '' : ' saving');
-  document.getElementById('sync-status').textContent = msg;
-}
-
-async function load() {
-  if (USE_FIREBASE) {
-    try {
-      const r = await fetch(FIREBASE_URL + '/' + KEY + '.json');
-      const data = await r.json();
-      if (data) state = data;
-      setSyncStatus(true, 'リアルタイム同期中 — みんなで共有されています');
-    } catch(e) { setSyncStatus(false, 'オフラインモード'); }
-  } else {
-    const ls = localStorage.getItem(KEY);
-    if (ls) state = JSON.parse(ls);
-    setSyncStatus(false, 'ローカル保存モード（Firebaseで全員共有可能）');
-  }
-  render();
-}
-
-async function save() {
-  setSyncStatus(false, '保存中…');
-  if (USE_FIREBASE) {
-    try {
-      await fetch(FIREBASE_URL + '/' + KEY + '.json', {
-        method: 'PUT',
-        headers: { 'Content-Type': 'application/json' },
-        body: JSON.stringify(state)
-      });
-      setSyncStatus(true, 'リアルタイム同期中 — みんなで共有されています');
-    } catch(e) { setSyncStatus(false, '保存失敗'); }
-  } else {
-    localStorage.setItem(KEY, JSON.stringify(state));
-    setSyncStatus(false, 'ローカルに保存しました');
-  }
-}
-
-function daysLeft() {
-  const now = new Date(); now.setHours(0,0,0,0);
-  const dl = new Date('2025-06-11');
-  const d = Math.ceil((dl - now) / 86400000);
-  const el = document.getElementById('days-badge');
-  el.textContent = d > 0 ? '残り' + d + '日' : d === 0 ? '今日が締切' : '締切超過';
-}
-
-function updateMetrics() {
-  const total = state.invites.length;
-  const high = state.invites.filter(i => i.conf === '高').length;
-  const rem = Math.max(0, TARGET - total);
-  const pct = Math.round(total / TARGET * 100);
-  document.getElementById('cnt-total').textContent = total;
-  document.getElementById('cnt-high').textContent = high;
-  document.getElementById('cnt-rem').textContent = rem;
-  document.getElementById('prog-fill').style.width = pct + '%';
-  document.getElementById('prog-text').textContent = total + ' / ' + TARGET + ' 人';
-  document.getElementById('prog-pct').textContent = pct + '%';
-}
-
-function confBadge(c) {
-  const map = { '高': ['conf-high', '高確度'], '中': ['conf-mid', '中確度'], '低': ['conf-low', '低確度'] };
-  const [cls, label] = map[c] || ['conf-mid', '中確度'];
-  return '<span class="badge ' + cls + '">' + label + '</span>';
-}
-
-function renderLog() {
-  const el = document.getElementById('log-list');
-  if (!state.invites.length) {
-    el.innerHTML = '<div class="empty-log">まだ記録がありません</div>';
-    return;
-  }
-  el.innerHTML = '';
-  [...state.invites].reverse().forEach((inv, ri) => {
-    const realIdx = state.invites.length - 1 - ri;
-    const d = document.createElement('div');
-    d.className = 'log-item';
-    d.innerHTML =
-      '<div class="avatar">え</div>' +
-      '<span class="log-name">' + inv.name + '</span>' +
-      (inv.conf ? confBadge(inv.conf) : '') +
-      (inv.month ? '<span class="month-badge">📅 ' + inv.month + '</span>' : '') +
-      '<span class="log-date">' + inv.date + '</span>' +
-      '<button class="del-btn" data-i="' + realIdx + '" title="削除">✕</button>';
-    el.appendChild(d);
-  });
-  el.querySelectorAll('.del-btn').forEach(btn => {
-    btn.onclick = async () => {
-      state.invites.splice(parseInt(btn.dataset.i), 1);
-      await save();
-      render();
-    };
-  });
-}
-
-async function doAdd() {
-  const name = document.getElementById('f-name').value.trim();
-  if (!name) { document.getElementById('f-name').focus(); return; }
-  const month = document.getElementById('f-month').value;
-  const now = new Date();
-  const dateStr = (now.getMonth() + 1) + '/' + now.getDate();
-  state.invites.push({ name, month, conf: selectedConf || '中', date: dateStr });
-  document.getElementById('f-name').value = '';
-  document.getElementById('f-month').value = '';
-  selectConf('');
-  await save();
-  render();
-}
-
-document.getElementById('f-name').addEventListener('keydown', e => { if (e.key === 'Enter') doAdd(); });
-
-function render() { daysLeft(); updateMetrics(); renderLog(); }
-
-load();
-</script>
-</body>
-</html>
